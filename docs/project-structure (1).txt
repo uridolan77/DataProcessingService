@@ -1,0 +1,70 @@
+# Data Processing Service - Project Structure
+
+```
+DataProcessingService/
+├── src/
+│   ├── DataProcessingService.API/                 # API Layer
+│   │   ├── Controllers/                           # API Controllers
+│   │   ├── DTOs/                                  # Data Transfer Objects
+│   │   ├── Middlewares/                           # Custom Middlewares
+│   │   ├── Program.cs                             # Application Entry Point
+│   │   ├── appsettings.json                       # Configuration
+│   │   └── Dockerfile                             # Docker Configuration
+│   │
+│   ├── DataProcessingService.Core/                # Core Business Logic
+│   │   ├── Domain/                                # Domain Models
+│   │   │   ├── Entities/                          # Entity Classes
+│   │   │   ├── Events/                            # Domain Events
+│   │   │   └── ValueObjects/                      # Value Objects
+│   │   │
+│   │   ├── Services/                              # Service Implementations
+│   │   │   ├── ETL/                               # ETL Services
+│   │   │   ├── DataConsistency/                   # Consistency Services
+│   │   │   └── Replication/                       # Replication Services
+│   │   │
+│   │   ├── Interfaces/                            # Abstractions/Interfaces
+│   │   │   ├── Repositories/                      # Repository Interfaces
+│   │   │   ├── Services/                          # Service Interfaces
+│   │   │   └── Messaging/                         # Message Handling
+│   │   │
+│   │   └── CQRS/                                  # Commands and Queries
+│   │       ├── Commands/                          # Command Handlers
+│   │       └── Queries/                           # Query Handlers
+│   │
+│   ├── DataProcessingService.Infrastructure/      # External Concerns
+│   │   ├── Data/                                  # Data Access
+│   │   │   ├── Configurations/                    # Entity Configurations
+│   │   │   ├── Repositories/                      # Repository Implementations
+│   │   │   └── AppDbContext.cs                    # EF Core Context
+│   │   │
+│   │   ├── Messaging/                             # Message Broker Integration
+│   │   │   ├── Consumers/                         # Message Consumers
+│   │   │   ├── Publishers/                        # Message Publishers
+│   │   │   └── Configuration/                     # Messaging Configuration
+│   │   │
+│   │   ├── External/                              # External Services
+│   │   │   ├── HttpClients/                       # HTTP Clients
+│   │   │   └── Adapters/                          # External Adapters
+│   │   │
+│   │   └── DependencyInjection.cs                 # DI Registration
+│   │
+│   └── DataProcessingService.Worker/              # Background Processors
+│       ├── Workers/                               # Background Workers
+│       ├── Program.cs                             # Worker Entry Point
+│       ├── appsettings.json                       # Configuration
+│       └── Dockerfile                             # Docker Configuration
+│
+├── tests/
+│   ├── DataProcessingService.UnitTests/           # Unit Tests
+│   │   ├── Services/                              # Service Tests
+│   │   ├── Handlers/                              # Handler Tests
+│   │   └── Domain/                                # Domain Model Tests
+│   │
+│   └── DataProcessingService.IntegrationTests/    # Integration Tests
+│       ├── API/                                   # API Tests
+│       ├── Infrastructure/                        # Infrastructure Tests
+│       └── TestFixtures/                          # Test Helper Classes
+│
+├── docker-compose.yml                             # Docker Compose Configuration
+└── DataProcessingService.sln                      # Solution File
+```

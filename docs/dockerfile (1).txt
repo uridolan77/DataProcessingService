@@ -1,0 +1,44 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+# Copy csproj files first and restore dependencies
+COPY ["src/CachingService.API/CachingService.API.csproj", "src/CachingService.API/"]
+COPY ["src/CachingService.Core/CachingService.Core.csproj", "src/CachingService.Core/"]
+COPY ["src/CachingService.Infrastructure/CachingService.Infrastructure.csproj", "src/CachingService.Infrastructure/"]
+COPY ["src/CachingService.Contracts/CachingService.Contracts.csproj", "src/CachingService.Contracts/"]
+RUN dotnet restore "src/CachingService.API/CachingService.API.csproj"
+
+# Copy the rest of the source code
+COPY ["src/", "/src/"]
+
+# Build the application
+WORKDIR "/src/CachingService.API"
+RUN dotnet build "CachingService.API.csproj" -c Release -o /app/build
+
+# Publish stage
+FROM build AS publish
+RUN dotnet publish "CachingService.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Final stage
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+# Install Redis tools for health checks and debugging
+RUN apt-get update && apt-get install -y redis-tools && rm -rf /var/lib/apt/lists/*
+
+# Copy published application
+COPY --from=publish /app/publish .
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost/health/ready || exit 1
+
+# Create a non-root user to run the application
+RUN addgroup --system --gid 1000 appgroup && \
+    adduser --system --uid 1000 --ingroup appgroup --shell /bin/sh appuser
+USER appuser
+
+ENTRYPOINT ["dotnet", "CachingService.API.dll"]
