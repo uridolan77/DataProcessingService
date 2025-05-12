@@ -75,11 +75,11 @@ public class DataSourcesController : BaseApiController
         var cursorId = parameters.GetDecodedCursor();
         var filteredSources = dataSources;
 
-        if (cursorId.HasValue)
+        if (cursorId != Guid.Empty)
         {
             filteredSources = parameters.SortDescending
-                ? dataSources.Where(ds => ds.Id.CompareTo(cursorId.Value) < 0)
-                : dataSources.Where(ds => ds.Id.CompareTo(cursorId.Value) > 0);
+                ? dataSources.Where(ds => ds.Id.CompareTo(cursorId) < 0)
+                : dataSources.Where(ds => ds.Id.CompareTo(cursorId) > 0);
         }
 
         // Apply sorting

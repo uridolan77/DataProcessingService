@@ -18,7 +18,7 @@ public interface IDataEnrichmentService
         string[] lookupValueFields,
         bool includeNullMatches = false,
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichFromApiAsync(
         IEnumerable<ExpandoObject> data,
         string apiUrl,
@@ -28,7 +28,7 @@ public interface IDataEnrichmentService
         int batchSize = 10,
         int rateLimitPerMinute = 60,
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichWithGeocodeAsync(
         IEnumerable<ExpandoObject> data,
         string addressField,
@@ -39,14 +39,14 @@ public interface IDataEnrichmentService
         string geocodeProvider = "default",
         string apiKey = "",
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichWithSentimentAnalysisAsync(
         IEnumerable<ExpandoObject> data,
         string textField,
         string targetField = "sentiment",
         string language = "en",
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichWithEntityExtractionAsync(
         IEnumerable<ExpandoObject> data,
         string textField,
@@ -54,12 +54,12 @@ public interface IDataEnrichmentService
         string[] entityTypes = null!,
         string language = "en",
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichWithCalculatedFieldsAsync(
         IEnumerable<ExpandoObject> data,
         Dictionary<string, CalculatedField> calculatedFields,
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichWithMlPredictionAsync(
         IEnumerable<ExpandoObject> data,
         string modelEndpoint,
@@ -67,7 +67,7 @@ public interface IDataEnrichmentService
         string targetField,
         string apiKey = "",
         CancellationToken cancellationToken = default);
-    
+
     Task<IEnumerable<ExpandoObject>> EnrichWithCustomFunctionAsync(
         IEnumerable<ExpandoObject> data,
         string functionScript,
@@ -82,10 +82,10 @@ public class CalculatedField
     public string[] SourceFields { get; set; } = null!;
     public string? Expression { get; set; }
     public Dictionary<string, object>? Parameters { get; set; }
-    
+
     public static CalculatedField Simple(
-        string targetField, 
-        CalculationType type, 
+        string targetField,
+        CalculationType type,
         string[] sourceFields)
     {
         return new CalculatedField
@@ -95,10 +95,10 @@ public class CalculatedField
             SourceFields = sourceFields
         };
     }
-    
-    public static CalculatedField Expression(
-        string targetField, 
-        string expression, 
+
+    public static CalculatedField CreateExpression(
+        string targetField,
+        string expression,
         string[] sourceFields)
     {
         return new CalculatedField
@@ -109,9 +109,9 @@ public class CalculatedField
             Expression = expression
         };
     }
-    
+
     public static CalculatedField Custom(
-        string targetField, 
+        string targetField,
         string[] sourceFields,
         Dictionary<string, object> parameters)
     {
